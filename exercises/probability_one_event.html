@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-require="math math-format probability word-problems">
+<html data-require="math math-format probability word-problems graphie">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Probability of One Event</title>
@@ -10,21 +10,21 @@
     <div class="problems">
         <div id="marbles">
             <div class="vars">
-                <var id="CONTAINER">randFromArray(["bag", "jar", "box", "cup"])</var>
+                <var id="CONTAINER">randFromArray(["bag", "jar", "box", "goblet"])</var>
                 <var id="MARBLE">randFromArray(["marble", "ball", "jelly bean"])</var>
-                <var id="RED">randRange(3, 11)</var>
-                <var id="GREEN">randRange(3, 11)</var>
-                <var id="BLUE">randRange(3, 11)</var>
-                <var id="TOTAL">RED + GREEN + BLUE</var>
+                <var id="REDMAR">randRange(3, 11)</var>
+                <var id="GREENMAR">randRange(3, 11)</var>
+                <var id="BLUEMAR">randRange(3, 11)</var>
+                <var id="TOTAL">REDMAR + GREENMAR + BLUEMAR</var>
 
                 <var id="NOT">rand(2) === 0</var>
-                <var id="CHOSEN_COLOR, CHOSEN_NUMBER">randFromArray([["red", RED], ["green", GREEN], ["blue", BLUE]])</var>
+                <var id="CHOSEN_COLOR, CHOSEN_NUMBER">randFromArray([["red", REDMAR], ["green", GREENMAR], ["blue", BLUEMAR]])</var>
                 <var id="NUMBER">NOT ? TOTAL - CHOSEN_NUMBER : CHOSEN_NUMBER</var>
             </div>
 
             <div class="question">
-                <p>A <var>CONTAINER</var> contains <code><var>RED</var></code> red <var>MARBLE</var>s,
-                <code><var>GREEN</var></code> green <var>MARBLE</var>s, and <code><var>BLUE</var></code> blue <var>MARBLE</var>s.</p>
+                <p>A <var>CONTAINER</var> contains <code><var>REDMAR</var></code> red <var>MARBLE</var>s,
+                <code><var>GREENMAR</var></code> green <var>MARBLE</var>s, and <code><var>BLUEMAR</var></code> blue <var>MARBLE</var>s.</p>
 
                 <p>If a <var>MARBLE</var> is randomly chosen, what is the probability
                 that it is <em data-if="NOT">not</em> <var>CHOSEN_COLOR</var>? Write your answer as a simplified fraction.</p>
@@ -32,7 +32,7 @@
 
             <div class="solution"><var>NUMBER / TOTAL</var></div>
             <div class="hints">
-                <p>There are <code><var>RED</var> + <var>GREEN</var> + <var>BLUE</var> = <var>TOTAL</var></code> <var>MARBLE</var>s in the <var>CONTAINER</var>.</p>
+                <p>There are <code><var>REDMAR</var> + <var>GREENMAR</var> + <var>BLUEMAR</var> = <var>TOTAL</var></code> <var>MARBLE</var>s in the <var>CONTAINER</var>.</p>
                 <p>There are <code><var>CHOSEN_NUMBER</var></code> <var>CHOSEN_COLOR</var> <var>MARBLE</var>s.
                 <span data-if="NOT">That means <code><var>TOTAL</var> - <var>CHOSEN_NUMBER</var> = <var>NUMBER</var></code> are <em>not</em> <var>CHOSEN_COLOR</var>.</span></p>
                 <p>The probability is <code>\displaystyle <var>fractionSimplification(NUMBER, TOTAL)</var></code>.</p>
