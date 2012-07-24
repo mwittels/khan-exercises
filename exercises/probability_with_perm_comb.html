@@ -126,9 +126,13 @@
                     <p>
                         Altogether, there are <code>2^<var>COINS</var> = <var>NUM_ALL</var></code> total possible outcomes.
                     </p>
-                    <p>
+                    <p data-if="NUM_RIGHT != PRETTY_NUMER">
                         So, the probability that you will get exactly <var>NUM</var> <var>NAME</var> is
                         <code>\frac{<var>NUM_RIGHT</var>}{<var>NUM_ALL</var>} = \frac{<var>PRETTY_NUMER</var>}{<var>PRETTY_DENOM</var>}</code>.
+                    </p>
+                    <p data-else>
+                        So, the probability that you will get exactly <var>NUM</var> <var>NAME</var> is
+                        <code>\frac{<var>NUM_RIGHT</var>}{<var>NUM_ALL</var>}</code>.
                     </p>
                 </div>
             </div>
