@@ -9,100 +9,130 @@
     <div class="exercise">
         <div class="problems">
             <div id="students">
-                <div class="vars">
+                <div class="vars" data-ensure="GROUP &lt; (ARE_B ? BOYS : GIRLS)">
                     <var id="STUDENTS">randRange(7,12)</var>
                     <var id="GROUP">randRange(3,6)</var>
-                    <var id="BOYS">randRange(2,STUDENTS-1)</var>
+                    <var id="BOYS">randRange(2,STUDENTS-2)</var>
                     <var id="GIRLS">STUDENTS-BOYS</var>
-                    <var id="ARE_B">random() &lt; 0.5 ? "boy" : "girl"</var>
-                    <var id="ANSWER">
+                    <var id="ARE_B">random() &lt; 0.5</var>
+                    <var id="NUM_B">ARE_B ? BOYS : GIRLS</var>
+                    <var id="ANSWER">(factorial(NUM_B)*factorial(STUDENTS-GROUP))/(factorial(STUDENTS)*factorial(NUM_B-GROUP))</var>
+                    <var id="GCD">getGCD(factorial(NUM_B)*factorial(STUDENTS-GROUP),factorial(STUDENTS)*factorial(NUM_B-GROUP))</var>
+                    <var id="PRETTY_NUM">factorial(NUM_B)*factorial(STUDENTS-GROUP)/GCD</var>
+                    <var id="PRETTY_DEM">factorial(STUDENTS)*factorial(NUM_B-GROUP)/GCD</var>
                 </div>
                 <p>
                     There are <var>STUDENTS</var> students in a class: <var>BOYS</var> boys and <var>GIRLS</var> girls.
                 </p>
                 <p class="question"> 
-                    If the teacher picks a group of <var>GROUP</var>, what is the probability that 
-                    everyone in the group is a <var>ARE_B</var>?
+                    If the teacher picks a group of <var>GROUP</var> at random, what is the probability that 
+                    everyone in the group is a <var>ARE_B ? "boy" : "girl"</var>?
                 </p>
-                <p class="solution" data-forms="integer"></p>
+                <p class="solution" data-forms="proper"><var>ANSWER</var></p>
                 <div class="hints">
                     <p>
-                        Sal has <var>NUM_TAKEN</var> spaces for his <var>THING</var>, so let's fill them one by one. At first, Sal has <var>NUM_TAKEN</var>
-                        choices for what to put in the first space.
+                        Since the teacher is choosing randomly, every group has an equal probability of
+                        being chosen. How many groups of students are there altogether? How many groups are there
+                        that only have <var>ARE_B ? "boys" : "girls"</var>?
                     </p>
                     <p>
-                        For the second space, he only has <var>NUM_TAKEN-1</var> <var>THING</var> left, so there are only <var>NUM_TAKEN-1</var> choices
-                        of what to put in the second space. So far, it seems like there are <code><var>NUM_TAKEN</var>*<var>NUM_TAKEN-1</var> = 
-                        <var>NUM_TAKEN*(NUM_TAKEN-1)</var></code> different unique choices Sal could have made to fill the first two spaces in his bag.
-                        But that's not quite right.
+                        We know two ways to count the number of groups we can choose: we use permutations if order matters,
+                        and combinations if it doesn't. Does the order the students are picked matter in this case?
                     </p>
                     <p>
-                        Why? Because if he picked <var>THING.substring(0,THING.length-1)</var> number 3, then <var>THING.substring(0,THING.length-1)</var>
-                        number 1, that's the same situation as picking #1 and then #3. They both end up in the same bag. 
+                        It doesn't matter if we pick James then Velma or Velma then James, so order must not matter. So, the number of ways
+                        to pick a group of <var>GROUP</var> students out of <var>STUDENTS</var> is
+                        <code> \frac{<var>STUDENTS</var>!}{(<var>STUDENTS</var>-<var>GROUP</var>)!<var>GROUP</var>!} = 
+                        \binom{<var>STUDENTS</var>}{<var>GROUP</var>}</code>. Remember that the
+                        <code><var>STUDENTS</var>! </code> and <code>(<var>STUDENTS</var>-<var>GROUP</var>)!</code> terms come from when we
+                        fill up the group, making <var>STUDENTS</var> choices for the first slot, then <var>STUDENTS-1</var> choices for the
+                        second, and so on, and the <code><var>GROUP</var>!</code> term comes from the fact that there are <code><var>GROUP</var>!</code> ways
+                        to order a group of <var>GROUP</var>, so we've overcounted each permutation exactly that many times.
                     </p>
                     <p>
-                        So, if Sal keeps filling the spaces in his bag, making <code><var>_.map(_.range(NUM_TAKEN), function(l){ return (NUM_THINGS - l);}).join("*")</var> = \frac{<var>NUM_THINGS</var>!}{<var>NUM_THINGS-NUM_TAKEN</var>!} = <var> factorial(NUM_THINGS)/factorial(NUM_THINGS-NUM_TAKEN)</var></code> decisions altogether, we've overcounted a bunch of groups.
+                        We can use the same logic to count the number of groups that only have boys.
                     </p>
                     <p>
-                        How much have we overcounted? Well, for every group of <var>NUM_TAKEN</var>, we've counted them as if the order we chose them in 
-                        matters, when really it doesn't. How many ways are there to order <var>NUM_TAKEN</var> things?
+                        Specifically, the number of ways to pick a group of <var>GROUP</var> students out of <var>NUM_B</var> is
+                        <code> \frac{<var>NUM_B</var>!}{(<var>NUM_B</var>-<var>GROUP</var>)!<var>GROUP</var>!} = 
+                        \binom{<var>NUM_B</var>}{<var>GROUP</var>}</code>.
                     </p>
                     <p>
-                        There are <code><var>NUM_TAKEN</var>! = <var>factorial(NUM_TAKEN)</var></code> ways of ordering <var>NUM_TAKEN</var> things, so we've counted each group of <var>NUM_TAKEN</var> <var>THING</var> <var>factorial(NUM_TAKEN)</var> times.
+                        So, the probability that the teacher picks a group of all <var>ARE_B ? "boys" : "girls"</var> is the number of 
+                        groups with only <var>ARE_B ? "boys" : "girls"</var> divided by the number of total groups the teacher could pick.
                     </p>
                     <p>
-                        So, we have to divide the number of ways we could have filled the bag in order by number of times we've overcounted our groups:
-                        </br>
-                        <code> \frac{<var>NUM_THINGS</var>!}{<var>NUM_THINGS-NUM_TAKEN</var>!} * \frac{1}{<var>NUM_TAKEN</var>!} = <var>ANSWER</var></code> is the number of groups of <var>THING</var> Sal can bring.
-                        </br>
-                        Another way to write this is <code> \binom{<var>NUM_THINGS</var>}{<var>NUM_TAKEN</var>} </code>, or <var>NUM_THINGS</var> choose <var>NUM_TAKEN</var>.
+                        This is <code> \displaystyle \frac{\frac{<var>NUM_B</var>!}{(<var>NUM_B</var>-<var>GROUP</var>)!<var>GROUP</var>!}}
+                        {\frac{<var>STUDENTS</var>!}{(<var>STUDENTS</var>-<var>GROUP</var>)!<var>GROUP</var>!}} = 
+                        (\frac{<var>NUM_B</var>!}{<var>STUDENTS</var>!})(\frac{<var>STUDENTS-GROUP</var>!}{<var>NUM_B-GROUP</var>!}) = 
+                        (\frac{1}{<var>factorial(STUDENTS)/factorial(NUM_B)</var>})(<var>factorial(STUDENTS-GROUP)/factorial(NUM_B-GROUP)</var>) =
+                        \frac{<var>PRETTY_NUM</var>}{<var>PRETTY_DEM</var>}</code>
                     </p>
                 </div>
             </div>
 
-            <div id="boat">
+            <div id="coins">
                 <div class="vars">
-                    <var id="FRIENDS">randRange(5,6)</var>
-                    <var id="SLOTS">randRange(2,FRIENDS-2)</var>
-                    <var id="ANSWER">factorial(FRIENDS)/(factorial(FRIENDS-SLOTS)*factorial(SLOTS))</var>
+                    <var id="COINS">randRange(4,7)</var>
+                    <var id="NUM">randRange(2,COINS-2)</var>
+                    <var id="IS_H">random &lt; 0.5</var>
+                    <var id="NAME">IS_H ? "heads" : "tails"</var>
+                    <var id="NUM_RIGHT">factorial(COINS)/(factorial(NUM)*factorial(COINS-NUM))</var>
+                    <var id="NUM_ALL">Math.pow(2,COINS)</var>
+                    <var id="GCD">getGCD(NUM_RIGHT,NUM_ALL)</var>
+                    <var id="PRETTY_NUMER">NUM_RIGHT/GCD</var>
+                    <var id="PRETTY_DENOM">NUM_ALL/GCD</var>
                 </div>
                 <p>
-                    You just got a free ticket for a boat ride, and you can bring along <var>SLOTS</var> friends! Unfortunately, you have <var>FRIENDS</var>
-                    friends who want to come along... 
+                    
                 </p>
-                <p class="question">How many different groups of friends could you take with you?</p>
+                <p class="question">
+                    If you flip a coin <var>COINS</var> times, what is the probability that you will get exactly <var>NUM</var> 
+                    <var>NAME</var>?
+                </p>
                 <p class="solution" data-forms="integer"><var>ANSWER</var></p>
 
                 <div class="hints">
                     <p>
-                        There are <var>SLOTS</var> places for your friends on the boat, so let's fill those slots one by one. For the first slot, we
-                        have <var>FRIENDS</var> different choices we can make (because <var>FRIENDS</var> different friends could be in that slot).
+                        One way to solve this problem is to figure out how many ways you can get exactly <var>NUM</var> <var>NAME</var>, then
+                        divide this by the total number of outcomes you could have gotten. Since every outcome has equal probability (this is
+                        a fair coin, so flipping heads is as likely as flipping tails), this will be the probability that you will get exactly 
+                        <var>NUM</var> <var>NAME</var>. 
                     </p>
                     <p>
-                        Once we've filled the first slot, there are <var>FRIENDS-1</var> friends who could fill the second. So far, if we've filled
-                        the first two slots, and it seems like there are <code><var>FRIENDS</var>*<var>FRIENDS-1</var> = <var>FRIENDS * (FRIENDS-1)</var>
-                        </code> different choices we could have made. But that's not quite true.
+                        How many outcomes are there where you get exactly <var>NUM</var> <var>NAME</var>? Try thinking of each outcome as 
+                        a length <var>COINS</var> word, where the 1st letter is "H" if the first coin toss was heads and "T" if it was tails,
+                        and so on.
                     </p>
                     <p>
-                        Why? Because if we picked Andy, then Sal, that's the same thing as picking Sal, then Andy. They both get to be on the same boat.
+                        So, the number of outcomes with exactly <var>NUM</var> <var>NAME</var> is the same as the number of these words which have
+                        <var>NUM</var> <var>IS_H ? "H's" : "T's"</var> and <var>COINS-NUM</var> <var>IS_H ? "T's" : "H's"</var>.
                     </p>
                     <p>
-                        So, if we continue filling the slots on our boat, making <code><var>_.map(_.range(SLOTS), function(l){ return (FRIENDS - l) + "*";}).join("").substring(0, SLOTS*2-1)</var> = \frac{<var>FRIENDS</var>!}{<var>FRIENDS-SLOTS</var>!} = <var> factorial(FRIENDS)/factorial(FRIENDS-SLOTS)</var></code> decisions altogether, we've overcounted a bunch of groups.
+                        How many of these are there? If we follow the technique we used to figure out the number of permutations of words,
+                        we'll find that there are <code><var>COINS</var>!</code> different arrangements, overcounting <code><var>NUM</var>!</code>
+                        times for every time we only switch the <var>IS_H ? "H's" : "T's"</var> around, and <code><var>COINS-NUM</var>!</code>
+                        times for every time we only switch the <var>IS_H ? "T's" : "H's"</var> around. For an example of this overcounting, this:
+                        </br></br>
+                        <code>HH\blue{T}\orange{T}\green{T}H</code> is the same as
+                        <code>HH\orange{T}\blue{T}\green{T}H</code>, and
+                        <code>HH\orange{T}\green{T}\blue{T}H</code>, and so on, even though saying there are <code><var>COINS</var>!</code> treats
+                        the different-colored T's as different.
                     </p>
                     <p>
-                        How much have we overcounted? Well, for every group of <var>SLOTS</var>, we've counted them as if the order we chose them in 
-                        matters, when really it doesn't. How many ways are there to order <var>SLOTS</var> things?
+                        So, there are <code>\frac{<var>COINS</var>!}{<var>NUM</var>!<var>COINS-NUM</var>!} = <var>NUM_RIGHT</var></code> different 
+                        outcomes where you get exactly <var>NUM</var> <var>NAME</var>. How many different outcomes are there?
                     </p>
                     <p>
-                        There are <code><var>SLOTS</var>! = <var>factorial(SLOTS)</var></code> ways of ordering <var>SLOTS</var> things, so we've counted
-                        each group of <var>SLOTS</var> friends <var>factorial(SLOTS)</var> times.
+                        Well, if you only flip one coin, there are two outcomes, if you flip two there are four outcomes, if you flip three there
+                        are eight...
                     </p>
                     <p>
-                        So, we have to divide the number of ways we could have filled the boat in order by number of times we've overcounted our groups:
-                        </br>
-                        <code> \frac{<var>FRIENDS</var>!}{<var>FRIENDS-SLOTS</var>!} * \frac{1}{<var>SLOTS</var>!} = <var>ANSWER</var></code> is the number of groups we can bring on the boat trip.
-                        </br>
-                        Another way to write this is <code> \binom{<var>FRIENDS</var>}{<var>SLOTS</var>} </code>, or <var>FRIENDS</var> choose <var>SLOTS</var>.
+                        Altogether, there are <code>2^<var>COINS</var> = <var>NUM_ALL</var></code> total possible outcomes.
+                    </p>
+                    <p>
+                        So, the probability that you will get exactly <var>NUM</var> <var>NAME</var> is
+                        <code>\frac{<var>NUM_RIGHT</var>}{<var>NUM_ALL</var>} = \frac{<var>PRETTY_NUMER</var>}{<var>PRETTY_DENOM</var>}</code>.
                     </p>
                 </div>
             </div>
