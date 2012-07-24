@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-require="math math-format word-problems">
+<html data-require="math math-format word-problems subhints">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Probability with permutations and combinations</title>
@@ -10,7 +10,7 @@
         <div class="problems">
             <div id="students">
                 <div class="vars" data-ensure="GROUP &lt; (ARE_B ? BOYS : GIRLS)">
-                    <var id="STUDENTS">randRange(7,12)</var>
+                    <var id="STUDENTS">randRange(7,10)</var>
                     <var id="GROUP">randRange(3,6)</var>
                     <var id="BOYS">randRange(2,STUDENTS-2)</var>
                     <var id="GIRLS">STUDENTS-BOYS</var>
@@ -39,16 +39,25 @@
                         We know two ways to count the number of groups we can choose: we use permutations if order matters,
                         and combinations if it doesn't. Does the order the students are picked matter in this case?
                     </p>
-                    <p>
-                        It doesn't matter if we pick James then Velma or Velma then James, so order must not matter. So, the number of ways
-                        to pick a group of <var>GROUP</var> students out of <var>STUDENTS</var> is
-                        <code> \frac{<var>STUDENTS</var>!}{(<var>STUDENTS</var>-<var>GROUP</var>)!<var>GROUP</var>!} = 
-                        \binom{<var>STUDENTS</var>}{<var>GROUP</var>}</code>. Remember that the
-                        <code><var>STUDENTS</var>! </code> and <code>(<var>STUDENTS</var>-<var>GROUP</var>)!</code> terms come from when we
-                        fill up the group, making <var>STUDENTS</var> choices for the first slot, then <var>STUDENTS-1</var> choices for the
-                        second, and so on, and the <code><var>GROUP</var>!</code> term comes from the fact that there are <code><var>GROUP</var>!</code> ways
-                        to order a group of <var>GROUP</var>, so we've overcounted each permutation exactly that many times.
-                    </p>
+                    <div>
+                        <p>
+                            It doesn't matter if we pick James then Velma or Velma then James, so order must not matter. So, the number of ways
+                            to pick a group of <var>GROUP</var> students out of <var>STUDENTS</var> is
+                            <code> \frac{<var>STUDENTS</var>!}{(<var>STUDENTS</var>-<var>GROUP</var>)!<var>GROUP</var>!} = 
+                            \binom{<var>STUDENTS</var>}{<var>GROUP</var>}</code>.
+                            [<a href="#" class="show-subhint" data-subhint="binomial">Show me why</a>]
+                        </p>
+                        <div class="subhint" id="binomial">
+                            <p>
+                                Remember that the
+                                <code><var>STUDENTS</var>! \;</code> and <code>(<var>STUDENTS</var>-<var>GROUP</var>)! \;</code> terms come from when we
+                                fill up the group, making <var>STUDENTS</var> choices for the first slot, then <var>STUDENTS-1</var> choices for the
+                                second, and so on. In this way, we end up making <code><var>_.map(_.range(GROUP), function(l){ return (STUDENTS-l)+"";}).join("*")</var> = \frac{<var>STUDENTS</var>!}{<var>STUDENTS-GROUP</var>!} \;</code>
+                                and the <code><var>GROUP</var>! \;</code> term comes from the fact that there are <code><var>GROUP</var>! \;</code> 
+                                ways to order a group of <var>GROUP</var>, so we've overcounted each permutation exactly that many times.
+                            </p>
+                        </div>
+                    </div>
                     <p>
                         We can use the same logic to count the number of groups that only have boys.
                     </p>
@@ -105,16 +114,29 @@
                         So, the number of outcomes with exactly <var>NUM</var> <var>NAME</var> is the same as the number of these words which have
                         <var>NUM</var> <var>IS_H ? "H's" : "T's"</var> and <var>COINS-NUM</var> <var>IS_H ? "T's" : "H's"</var>.
                     </p>
-                    <p>
-                        How many of these are there? If we follow the technique we used to figure out the number of permutations of words,
-                        we'll find that there are <code><var>COINS</var>!</code> different arrangements, overcounting <code><var>NUM</var>!</code>
-                        times for every time we only switch the <var>IS_H ? "H's" : "T's"</var> around, and <code><var>COINS-NUM</var>!</code>
-                        times for every time we only switch the <var>IS_H ? "T's" : "H's"</var> around. For an example of this overcounting,
-                        <code>H\blue{T}H\orange{T}\green{T}H</code> is the same as
-                        <code>H\orange{T}H\blue{T}\green{T}H</code>, and
-                        <code>H\orange{T}H\green{T}\blue{T}H</code>, and so on, even though saying there are <code><var>COINS</var>!</code> treats
-                        the different-colored T's as different.
-                    </p>
+                    <div>
+                        <p>
+                            How many of these are there? If we follow the technique we used to figure out the number of permutations of words,
+                            we'll find that there are <code><var>COINS</var>!</code> different arrangements, overcounting <code><var>NUM</var>!</code>
+                            times for every time we only switch the <var>IS_H ? "H's" : "T's"</var> around, and <code><var>COINS-NUM</var>!</code>
+                            times for every time we only switch the <var>IS_H ? "T's" : "H's"</var> around.
+                            [<a href="#" class="show-subhint" data-subhint="letters">Wait, what?</a>]
+                        </p>
+                        <div class="subhint" id="letters">
+                            Let's say we toss a coin 6 times, and get tails three times. How many different re-arrangements are there of the
+                            letters "HHHTTT"? Well, we have six choices for the first slot, five for the second slot, and so on, resulting in
+                            <code>6\times5\times4\times3\times2\times1 = 6! = 720</code> different re-arrangements. But, this treats all the letters
+                            as unique, when
+                            <code>H\blue{T}H\orange{T}\green{T}H</code> is the same as
+                            <code>H\orange{T}H\blue{T}\green{T}H</code>, and
+                            <code>H\orange{T}H\green{T}\blue{T}H</code>, and so on. So really, we need to replace all these different re-arrangements
+                            where we only move the tails around with one re-arrangement, <code>HTHTTH</code>. There are <code>3!</code> of these multi-
+                            colored arrangements for every normal one, so that means dividing
+                            our first guess of <code>6!</code> by <code>3!</code>. By the exact same logic, we need to divide by <code>3!</code> again to
+                            avoid overcounting every permutation where we just move the heads around. So, the number of re-arrangements is 
+                            <code>\frac{6!}{3!3!} = \binom{6}{3}</code>.
+                        </div>
+                    </div>
                     <p>
                         So, there are <code>\frac{<var>COINS</var>!}{<var>NUM</var>!<var>COINS-NUM</var>!} = <var>NUM_RIGHT</var></code> different 
                         outcomes where you get exactly <var>NUM</var> <var>NAME</var>. How many different outcomes are there?
