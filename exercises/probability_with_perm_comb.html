@@ -28,7 +28,7 @@
                     If the teacher picks a group of <var>GROUP</var> at random, what is the probability that 
                     everyone in the group is a <var>ARE_B ? "boy" : "girl"</var>?
                 </p>
-                <p class="solution" data-forms="proper"><var>ANSWER</var></p>
+                <p class="solution" data-forms="proper, decimal"><var>ANSWER</var></p>
                 <div class="hints">
                     <p>
                         Since the teacher is choosing randomly, every group has an equal probability of
@@ -83,20 +83,17 @@
                     <var id="PRETTY_NUMER">NUM_RIGHT/GCD</var>
                     <var id="PRETTY_DENOM">NUM_ALL/GCD</var>
                 </div>
-                <p>
-                    
-                </p>
+
                 <p class="question">
-                    If you flip a coin <var>COINS</var> times, what is the probability that you will get exactly <var>NUM</var> 
+                    If you flip a fair coin <var>COINS</var> times, what is the probability that you will get exactly <var>NUM</var> 
                     <var>NAME</var>?
                 </p>
-                <p class="solution" data-forms="integer"><var>ANSWER</var></p>
+                <p class="solution" data-forms="proper, decimal"><var>PRETTY_NUMER/PRETTY_DENOM</var></p>
 
                 <div class="hints">
                     <p>
                         One way to solve this problem is to figure out how many ways you can get exactly <var>NUM</var> <var>NAME</var>, then
-                        divide this by the total number of outcomes you could have gotten. Since every outcome has equal probability (this is
-                        a fair coin, so flipping heads is as likely as flipping tails), this will be the probability that you will get exactly 
+                        divide this by the total number of outcomes you could have gotten. Since every outcome has equal probability, this will be the probability that you will get exactly 
                         <var>NUM</var> <var>NAME</var>. 
                     </p>
                     <p>
@@ -112,11 +109,10 @@
                         How many of these are there? If we follow the technique we used to figure out the number of permutations of words,
                         we'll find that there are <code><var>COINS</var>!</code> different arrangements, overcounting <code><var>NUM</var>!</code>
                         times for every time we only switch the <var>IS_H ? "H's" : "T's"</var> around, and <code><var>COINS-NUM</var>!</code>
-                        times for every time we only switch the <var>IS_H ? "T's" : "H's"</var> around. For an example of this overcounting, this:
-                        </br></br>
-                        <code>HH\blue{T}\orange{T}\green{T}H</code> is the same as
-                        <code>HH\orange{T}\blue{T}\green{T}H</code>, and
-                        <code>HH\orange{T}\green{T}\blue{T}H</code>, and so on, even though saying there are <code><var>COINS</var>!</code> treats
+                        times for every time we only switch the <var>IS_H ? "T's" : "H's"</var> around. For an example of this overcounting,
+                        <code>H\blue{T}H\orange{T}\green{T}H</code> is the same as
+                        <code>H\orange{T}H\blue{T}\green{T}H</code>, and
+                        <code>H\orange{T}H\green{T}\blue{T}H</code>, and so on, even though saying there are <code><var>COINS</var>!</code> treats
                         the different-colored T's as different.
                     </p>
                     <p>
